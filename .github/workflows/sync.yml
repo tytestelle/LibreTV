@@ -2,7 +2,7 @@ name: Sync Fork with Upstream (Keep Workflow)
 
 on:
   schedule:
-    - cron: '0 0 * * *' # 每天 UTC 0 点（北京时间早上 8 点）
+    - cron: '0 */4 * * *' # 每 4 小时一次
   workflow_dispatch:
 
 jobs:
@@ -29,10 +29,10 @@ jobs:
           git remote add upstream https://github.com/LibreSpark/LibreTV.git
           git fetch upstream
 
-      - name: Hard reset main branch to upstream
+      - name: Merge upstream changes into main
         run: |
           git checkout main
-          git reset --hard upstream/main
+          git merge upstream/main --no-edit || true
 
       - name: Restore workflows directory
         run: |
@@ -42,4 +42,4 @@ jobs:
           git commit -m "Restore workflows after sync" || true
 
       - name: Push changes to origin
-        run: git push origin main --force
+        run: git push origin main
